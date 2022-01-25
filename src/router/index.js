@@ -1,6 +1,3 @@
-/* eslint-disable comma-dangle */
-/* eslint-disable semi */
-/* eslint-disable quotes */
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import Products from "../views/Products.vue";

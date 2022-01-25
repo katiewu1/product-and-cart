@@ -12,13 +12,68 @@
         <span>Past Orders</span>
       </router-link>
     </nav>
-    <!-- <router-link @click="toggleSidebar" class="top-bar-cart-link">
-      <i class="icofont-cart-alt icofont-1x"></i> -->
-    <!-- update the cart - changed it to be dynamic -->
-    <!-- <span>Cart ({{ totalQuantity }})</span>
-    </router-link> -->
+    <div @click="toggleSidebar" class="top-bar-cart-link">
+      <i class="icofont-cart-alt icofont-1x"></i>
+      <!-- update the cart - changed it to be dynamic -->
+      <span>Cart ({{ totalQuantity }})</span>
+    </div>
   </header>
-  <router-view />
+  <router-view :inventory="inventory" :addToCart="addToCart" />
+
+  <!-- passing props (functions and variables) down to children -->
+  <!-- The children can call functions, update the state of the parent component -->
+  <Sidebar
+    v-if="showSidebar"
+    :toggle="toggleSidebar"
+    :cart="cart"
+    :inventory="inventory"
+    :remove="removeItem"
+  />
 </template>
 
-<style scoped></style>
+<!-- <style scoped></style> -->
+
+<script>
+// import Sidebar from './components/Sidebar.vue'
+// @ is an alias to /src
+import Sidebar from "@/components/Sidebar.vue";
+import food from "@/food.json";
+
+// Options Object
+export default {
+  components: {
+    Sidebar,
+  },
+  data() {
+    return {
+      showSidebar: false,
+      inventory: food,
+      cart: {},
+    };
+  },
+  computed: {
+    totalQuantity() {
+      return Object.values(this.cart).reduce((acc, curr) => {
+        return acc + curr;
+      }, 0);
+    },
+  },
+  methods: {
+    addToCart(name, quantity) {
+      if (!this.cart[name]) this.cart[name] = 0;
+      // need to pass in the index when calling this addToCart function
+      // this.inventory[index].quantity -> quantity
+      this.cart[name] += quantity;
+      // clear the inputs/quantity by setting it to 0
+      // this.inventory[index].quantity = 0;
+      // console.log(this.cart);
+    },
+    toggleSidebar() {
+      this.showSidebar = !this.showSidebar;
+    },
+    removeItem(name) {
+      delete this.cart[name];
+    },
+  },
+};
+</script>
